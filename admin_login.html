@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | Corvit</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<header class="top-header">
+    <div class="header-content">
+
+        <div class="brand">
+            <div class="brand-box">C</div>
+
+            <div>
+                <h1>Corvit</h1>
+                <span>Student Feedback System</span>
+            </div>
+        </div>
+
+        <div class="header-text">
+            Admin Portal
+        </div>
+
+    </div>
+</header>
+
+
+<main class="login-container">
+
+    <div class="login-card">
+
+        <div class="login-icon">
+            🔐
+        </div>
+
+        <h1>Admin Login</h1>
+
+        <p class="login-description">
+            Login to manage student feedback and system reports.
+        </p>
+
+        {% if error %}
+        <div class="login-error">
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <form action="{{ url_for('admin_login_submit') }}" method="POST">
+
+            <div class="form-group">
+                <label for="username">
+                    Username
+                </label>
+
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="Enter admin username"
+                    required
+                >
+            </div>
+
+
+            <div class="form-group">
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter admin password"
+                    required
+                >
+            </div>
+
+
+            <button type="submit" class="continue-button">
+                Login as Admin
+            </button>
+
+        </form>
+
+
+        <p class="privacy-note">
+            Authorized administrators only.
+        </p>
+
+    </div>
+
+</main>
+
+
+<footer>
+    © 2026 Corvit Institute of Information Technology
+</footer>
+
+</body>
+</html>

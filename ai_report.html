@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Report - Corvit Feedback System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<header class="main-header">
+    <div class="header-container">
+        <div class="brand">
+            <h1>Corvit</h1>
+            <p>Student Feedback System</p>
+        </div>
+
+        <div class="admin-header">
+            <span>Admin Panel</span>
+            <a href="{{ url_for('admin_logout') }}">Logout</a>
+        </div>
+    </div>
+</header>
+
+<main class="admin-page">
+
+    <div class="page-heading">
+        <div>
+            <h1>AI Feedback Report</h1>
+            <p>AI-powered analysis of student feedback.</p>
+        </div>
+
+        <a href="{{ url_for('admin_dashboard') }}" class="back-button">
+            Dashboard
+        </a>
+    </div>
+
+
+    <div class="dashboard-cards">
+
+        <div class="dashboard-card">
+            <div class="dashboard-card-title">Total Feedbacks</div>
+            <div class="dashboard-card-value">{{ total_feedbacks }}</div>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="dashboard-card-title">Average Rating</div>
+            <div class="dashboard-card-value">{{ average_rating }}/5</div>
+        </div>
+
+        <div class="dashboard-card positive-card">
+            <div class="dashboard-card-title">Positive Feedback</div>
+            <div class="dashboard-card-value">{{ positive_feedback }}</div>
+        </div>
+
+        <div class="dashboard-card negative-card">
+            <div class="dashboard-card-title">Negative Feedback</div>
+            <div class="dashboard-card-value">{{ negative_feedback }}</div>
+        </div>
+
+    </div>
+
+
+    <div class="ai-report-card">
+        <h2>Overall Sentiment</h2>
+        <div class="ai-sentiment">{{ overall_sentiment }}</div>
+    </div>
+
+
+    <div class="ai-report-card">
+        <h2>Sentiment Analysis</h2>
+
+        <div class="ai-sentiment-counts">
+
+            <div class="sentiment-box positive-box">
+                <strong>{{ positive_count }}</strong>
+                <span>Positive</span>
+                <small>{{ positive_percentage }}%</small>
+            </div>
+
+            <div class="sentiment-box negative-box">
+                <strong>{{ negative_count }}</strong>
+                <span>Negative</span>
+                <small>{{ negative_percentage }}%</small>
+            </div>
+
+            <div class="sentiment-box neutral-box">
+                <strong>{{ neutral_count }}</strong>
+                <span>Neutral</span>
+                <small>{{ neutral_percentage }}%</small>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="ai-report-card">
+        <h2>Priority Level</h2>
+        <div class="ai-sentiment">{{ priority }}</div>
+    </div>
+
+
+    <div class="ai-report-card">
+        <h2>Most Mentioned Topic</h2>
+
+        {% if most_topic_count > 0 %}
+            <div class="topic-highlight">
+                <strong>{{ most_mentioned_topic }}</strong>
+                <span>
+                    {{ most_topic_count }}
+                    mention{% if most_topic_count != 1 %}s{% endif %}
+                </span>
+            </div>
+        {% else %}
+            <p>No major topic detected yet.</p>
+        {% endif %}
+    </div>
+
+
+    <div class="ai-report-card">
+        <h2>Feedback Summary</h2>
+        <p>{{ summary }}</p>
+    </div>
+
+
+    <div class="ai-report-card">
+        <h2>Top Strengths</h2>
+
+        {% if strengths %}
+            <ul class="ai-list">
+                {% for strength in strengths %}
+                    <li>{{ strength }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No positive comments available yet.</p>
+        {% endif %}
+    </div>
+
+
+    <div class="ai-report-card">
+        <h2>Top Complaints</h2>
+
+        {% if complaints %}
+            <ul class="ai-list">
+                {% for complaint in complaints %}
+                    <li>{{ complaint }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No negative comments available yet.</p>
+        {% endif %}
+    </div>
+
+
+    <div class="ai-report-card">
+        <h2>Detected Topics</h2>
+
+        {% if topics %}
+            <div class="topic-list">
+                {% for topic in topics %}
+                    <div class="topic-item">
+                        <strong>{{ topic[0] }}</strong>
+                        <span>
+                            {{ topic[1] }}
+                            mention{% if topic[1] != 1 %}s{% endif %}
+                        </span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No topics detected yet.</p>
+        {% endif %}
+    </div>
+
+
+    <div class="ai-report-card">
+        <h2>Topic-wise AI Analysis</h2>
+
+        {% if topic_analysis %}
+            <div class="topic-list">
+                {% for item in topic_analysis %}
+                    <div class="topic-item">
+                        <strong>{{ item['topic'] }}</strong>
+                        <span>
+                            {{ item['count'] }}
+                            mention{% if item['count'] != 1 %}s{% endif %}
+                            | Positive: {{ item['positive'] }} ({{ item['positive_percentage'] }}%)
+                            | Negative: {{ item['negative'] }} ({{ item['negative_percentage'] }}%)
+                            | Neutral: {{ item['neutral'] }} ({{ item['neutral_percentage'] }}%)
+                        </span>
+                        <small>{{ item['insight'] }}</small>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No topic-wise analysis available yet.</p>
+        {% endif %}
+    </div>
+
+
+    <div class="ai-report-card">
+        <h2>Course-wise AI Insight</h2>
+
+        {% if course_analysis %}
+            <div class="topic-list">
+                {% for item in course_analysis %}
+                    <div class="topic-item">
+                        <strong>{{ item['course'] }}</strong>
+                        <span>
+                            {{ item['total'] }}
+                            comment{% if item['total'] != 1 %}s{% endif %}
+                            | Positive: {{ item['positive'] }} ({{ item['positive_percentage'] }}%)
+                            | Negative: {{ item['negative'] }} ({{ item['negative_percentage'] }}%)
+                            | Neutral: {{ item['neutral'] }} ({{ item['neutral_percentage'] }}%)
+                        </span>
+                        <small>{{ item['insight'] }}</small>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No course-wise analysis available yet.</p>
+        {% endif %}
+    </div>
+
+
+    <div class="ai-report-card">
+        <h2>AI Improvement Suggestions</h2>
+
+        {% if suggestions %}
+            <ul class="ai-list">
+                {% for suggestion in suggestions %}
+                    <li>{{ suggestion }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No improvement suggestions available yet.</p>
+        {% endif %}
+    </div>
+
+
+    <div class="ai-report-card">
+        <h2>Student Comments</h2>
+
+        {% if text_answers %}
+            {% for answer in text_answers %}
+                <div class="ai-comment">
+                    <div class="ai-comment-question">{{ answer['question'] }}</div>
+                    <div class="ai-comment-text">{{ answer['answer'] }}</div>
+                    <div class="ai-comment-course">Course: {{ answer['course_name'] }}</div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="dashboard-empty">No written feedback is available yet.</div>
+        {% endif %}
+    </div>
+
+</main>
+
+<footer class="main-footer">
+    <p>© 2026 Corvit Institute of Information Technology</p>
+</footer>
+
+</body>
+</html>

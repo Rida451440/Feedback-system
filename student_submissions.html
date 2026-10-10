@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Submissions - Corvit Feedback System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header class="main-header">
+    <div class="header-container">
+        <div class="brand">
+            <h1>Corvit</h1>
+            <p>Student Feedback System</p>
+        </div>
+
+        <div class="admin-header">
+            <span>Admin Panel</span>
+            <a href="{{ url_for('admin_logout') }}">Logout</a>
+        </div>
+    </div>
+</header>
+
+<main class="admin-page">
+
+    <div class="page-heading">
+        <div>
+            <h1>Student Submissions</h1>
+            <p>View and manage submitted student feedback.</p>
+        </div>
+
+        <a href="{{ url_for('admin_dashboard') }}" class="back-button">
+            Dashboard
+        </a>
+    </div>
+
+    <div class="submission-tools">
+
+        <div class="search-box">
+            <label for="search">Search</label>
+            <input
+                type="text"
+                id="search"
+                placeholder="Search student name or registration no."
+            >
+        </div>
+
+        <div class="filter-box">
+            <label for="courseFilter">Course</label>
+            <select id="courseFilter">
+                <option value="">All Courses</option>
+
+                {% set course_names = [] %}
+
+                {% for submission in submissions %}
+                    {% if submission.course_name not in course_names %}
+                        {% set _ = course_names.append(submission.course_name) %}
+                    {% endif %}
+                {% endfor %}
+
+                {% for course in course_names|sort %}
+                    <option value="{{ course }}">
+                        {{ course }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+    </div>
+
+    <div class="submission-card">
+
+        {% if submissions %}
+
+        <div class="table-container">
+            <table class="submission-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Student Name</th>
+                        <th>Registration No.</th>
+                        <th>Course</th>
+                        <th>Average Rating</th>
+                        <th>Date & Time</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody id="submissionTable">
+
+                    {% for submission in submissions %}
+
+                    <tr>
+                        <td>{{ loop.index }}</td>
+
+                        <td class="student-name">
+                            {{ submission.student_name }}
+                        </td>
+
+                        <td class="reg-no">
+                            {{ submission.reg_no }}
+                        </td>
+
+                        <td class="course-name">
+                            {{ submission.course_name }}
+                        </td>
+
+                        <td>
+                            {% if submission.avg_rating is not none %}
+                                {{ submission.avg_rating }}/5
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+
+                        <td>
+                            {{ submission.created_at }}
+                        </td>
+
+                        <td>
+                            <div class="submission-actions">
+
+                                <a
+                                    href="{{ url_for('submission_detail', submission_id=submission.id) }}"
+                                    class="view-button"
+                                >
+                                    View
+                                </a>
+
+                                <form
+                                    method="POST"
+                                    action="{{ url_for('delete_submission', submission_id=submission.id) }}"
+                                >
+                                    <button
+                                        type="submit"
+                                        class="delete-button"
+                                    >
+                                        Delete
+                                    </button>
+                                </form>
+
+                            </div>
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+        {% else %}
+
+        <div class="no-submissions">
+            <h2>No Submissions Yet</h2>
+            <p>Student feedback submissions will appear here.</p>
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</main>
+
+<footer class="main-footer">
+    <p>© 2026 Corvit Institute of Information Technology</p>
+</footer>
+
+<script>
+const searchInput = document.getElementById("search");
+const courseFilter = document.getElementById("courseFilter");
+const rows = document.querySelectorAll("#submissionTable tr");
+
+function filterSubmissions() {
+    const searchValue = searchInput.value.toLowerCase();
+    const courseValue = courseFilter.value.toLowerCase();
+
+    rows.forEach(row => {
+        const name = row.querySelector(".student-name").textContent.toLowerCase();
+        const regNo = row.querySelector(".reg-no").textContent.toLowerCase();
+        const course = row.querySelector(".course-name").textContent.toLowerCase();
+
+        const searchMatch =
+            name.includes(searchValue) ||
+            regNo.includes(searchValue);
+
+        const courseMatch =
+            !courseValue ||
+            course === courseValue;
+
+        row.style.display =
+            searchMatch && courseMatch
+                ? ""
+                : "none";
+    });
+}
+
+searchInput.addEventListener("input", filterSubmissions);
+courseFilter.addEventListener("change", filterSubmissions);
+</script>
+
+</body>
+</html>
+

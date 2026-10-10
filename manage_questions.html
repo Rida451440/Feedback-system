@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Manage Questions | Corvit</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<header class="top-header">
+
+    <div class="header-content">
+
+        <div class="brand">
+
+            <div class="brand-box">
+                C
+            </div>
+
+            <div>
+                <h1>Corvit</h1>
+                <span>Student Feedback System</span>
+            </div>
+
+        </div>
+
+        <div class="admin-header-actions">
+
+            <span>Admin Panel</span>
+
+            <a href="{{ url_for('admin_logout') }}">
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<main class="dashboard-container">
+
+    <div class="page-top">
+
+        <div>
+
+            <h1>Manage Questions</h1>
+
+            <p>
+                Add, edit or delete feedback questions and sections.
+            </p>
+
+        </div>
+
+        <a href="{{ url_for('admin_dashboard') }}"
+           class="back-button">
+            Back to Dashboard
+        </a>
+
+    </div>
+
+
+    <section class="dashboard-card add-question-card">
+
+        <div class="dashboard-card-header">
+
+            <h2>Add New Question</h2>
+
+        </div>
+
+
+        <form action="{{ url_for('add_question') }}"
+              method="POST"
+              class="add-question-form">
+
+            <div class="question-form-group">
+
+                <label for="section">
+                    Section
+                </label>
+
+                <input
+                    type="text"
+                    id="section"
+                    name="section"
+                    list="section-list"
+                    placeholder="Enter or select section"
+                    required
+                >
+
+                <datalist id="section-list">
+
+                    {% for section in sections %}
+
+                    <option value="{{ section.section }}">
+
+                    {% endfor %}
+
+                </datalist>
+
+            </div>
+
+
+            <div class="question-form-group">
+
+                <label for="q_type">
+                    Question Type
+                </label>
+
+                <select
+                    id="q_type"
+                    name="q_type"
+                    required
+                >
+
+                    <option value="">
+                        Select Type
+                    </option>
+
+                    <option value="rating">
+                        Rating (1-5)
+                    </option>
+
+                    <option value="yesno">
+                        Yes / No
+                    </option>
+
+                    <option value="text">
+                        Text Answer
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <div class="question-form-group question-input-group">
+
+                <label for="text">
+                    Question
+                </label>
+
+                <input
+                    type="text"
+                    id="text"
+                    name="text"
+                    placeholder="Enter question"
+                    required
+                >
+
+            </div>
+
+
+            <div class="question-add-button">
+
+                <button type="submit">
+                    Add Question
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+
+    <section class="dashboard-card">
+
+        <div class="dashboard-card-header">
+
+            <h2>
+                Current Questions
+            </h2>
+
+        </div>
+
+
+        <div class="question-table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>#</th>
+                        <th>Section</th>
+                        <th>Question</th>
+                        <th>Type</th>
+                        <th>Action</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for question in questions %}
+
+                    <tr>
+
+                        <td>
+                            {{ loop.index }}
+                        </td>
+
+                        <td>
+                            {{ question.section }}
+                        </td>
+
+                        <td>
+                            {{ question.text }}
+                        </td>
+
+                        <td>
+
+                            {% if question.q_type == "rating" %}
+
+                            Rating
+
+                            {% elif question.q_type == "yesno" %}
+
+                            Yes / No
+
+                            {% else %}
+
+                            Text
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            <div class="question-actions">
+
+                                <button
+                                    type="button"
+                                    class="edit-button"
+                                    onclick="document.getElementById('edit-{{ question.id }}').style.display='flex'"
+                                >
+                                    Edit
+                                </button>
+
+                                <form
+                                    action="{{ url_for('delete_question', question_id=question.id) }}"
+                                    method="POST"
+                                >
+
+                                    <button
+                                        type="submit"
+                                        class="delete-button"
+                                    >
+                                        Delete
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+
+                            <div
+                                id="edit-{{ question.id }}"
+                                class="edit-box"
+                            >
+
+                                <form
+                                    action="{{ url_for('edit_question', question_id=question.id) }}"
+                                    method="POST"
+                                >
+
+                                    <label>
+                                        Section
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        name="section"
+                                        value="{{ question.section }}"
+                                        required
+                                    >
+
+
+                                    <label>
+                                        Question
+                                    </label>
+
+                                    <input
+                                        type="text"
+                                        name="text"
+                                        value="{{ question.text }}"
+                                        required
+                                    >
+
+
+                                    <label>
+                                        Type
+                                    </label>
+
+                                    <select
+                                        name="q_type"
+                                        required
+                                    >
+
+                                        <option
+                                            value="rating"
+                                            {% if question.q_type == "rating" %}selected{% endif %}
+                                        >
+                                            Rating (1-5)
+                                        </option>
+
+                                        <option
+                                            value="yesno"
+                                            {% if question.q_type == "yesno" %}selected{% endif %}
+                                        >
+                                            Yes / No
+                                        </option>
+
+                                        <option
+                                            value="text"
+                                            {% if question.q_type == "text" %}selected{% endif %}
+                                        >
+                                            Text Answer
+                                        </option>
+
+                                    </select>
+
+
+                                    <div class="edit-buttons">
+
+                                        <button
+                                            type="submit"
+                                            class="save-button"
+                                        >
+                                            Save Changes
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            class="cancel-button"
+                                            onclick="document.getElementById('edit-{{ question.id }}').style.display='none'"
+                                        >
+                                            Cancel
+                                        </button>
+
+                                    </div>
+
+                                </form>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% else %}
+
+                    <tr>
+
+                        <td colspan="5">
+                            No questions found.
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<footer>
+    © 2026 Corvit Institute of Information Technology
+</footer>
+
+</body>
+</html>

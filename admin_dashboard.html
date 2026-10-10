@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Corvit Feedback System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header class="main-header">
+    <div class="header-container">
+        <div class="brand">
+            <h1>Corvit</h1>
+            <p>Student Feedback System</p>
+        </div>
+
+        <div class="admin-header">
+            <span>Admin Panel</span>
+            <a href="{{ url_for('admin_logout') }}">Logout</a>
+        </div>
+    </div>
+</header>
+
+<main class="admin-page">
+
+    <div class="page-heading">
+        <div>
+            <h1>Admin Dashboard</h1>
+            <p>Overview of student feedback and institute performance.</p>
+        </div>
+    </div>
+
+    <div class="dashboard-cards">
+
+        <div class="dashboard-card">
+            <div class="dashboard-card-title">
+                Total Feedbacks
+            </div>
+            <div class="dashboard-card-value">
+                {{ total_feedbacks }}
+            </div>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="dashboard-card-title">
+                Average Rating
+            </div>
+            <div class="dashboard-card-value">
+                {{ average_rating }}/5
+            </div>
+        </div>
+
+        <div class="dashboard-card positive-card">
+            <div class="dashboard-card-title">
+                Positive Feedback
+            </div>
+            <div class="dashboard-card-value">
+                {{ positive_feedback }}
+            </div>
+        </div>
+
+        <div class="dashboard-card negative-card">
+            <div class="dashboard-card-title">
+                Negative Feedback
+            </div>
+            <div class="dashboard-card-value">
+                {{ negative_feedback }}
+            </div>
+        </div>
+
+    </div>
+
+    <div class="dashboard-navigation">
+
+        <a href="{{ url_for('student_submissions') }}" class="dashboard-nav-button">
+            Student Submissions
+        </a>
+
+        <a href="{{ url_for('manage_questions') }}" class="dashboard-nav-button">
+            Manage Questions
+        </a>
+
+        <a href="{{ url_for('ai_report') }}" class="dashboard-nav-button">
+            AI Report
+        </a>
+
+    </div>
+
+    <div class="dashboard-grid">
+
+        <div class="dashboard-section">
+
+            <div class="dashboard-section-header">
+                <h2>Course-wise Performance</h2>
+                <p>Average rating by course.</p>
+            </div>
+
+            {% if course_stats %}
+
+            <div class="dashboard-table-container">
+
+                <table class="dashboard-table">
+
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Course</th>
+                            <th>Feedbacks</th>
+                            <th>Average Rating</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for course in course_stats %}
+
+                        <tr>
+                            <td>{{ loop.index }}</td>
+
+                            <td>
+                                <strong>{{ course.name }}</strong>
+                            </td>
+
+                            <td>
+                                {{ course.total }}
+                            </td>
+
+                            <td>
+                                {% if course.average is not none %}
+                                    <span class="dashboard-rating">
+                                        {{ course.average }}/5
+                                    </span>
+                                {% else %}
+                                    <span class="no-rating">
+                                        No feedback
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <div class="dashboard-empty">
+                No course data available.
+            </div>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="dashboard-section">
+
+            <div class="dashboard-section-header">
+                <h2>Section-wise Performance</h2>
+                <p>Average rating for each feedback section.</p>
+            </div>
+
+            {% if section_stats %}
+
+            <div class="dashboard-table-container">
+
+                <table class="dashboard-table">
+
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Section</th>
+                            <th>Average Rating</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for section in section_stats %}
+
+                        <tr>
+                            <td>{{ loop.index }}</td>
+
+                            <td>
+                                <strong>{{ section.section }}</strong>
+                            </td>
+
+                            <td>
+                                {% if section.average is not none %}
+                                    <span class="dashboard-rating">
+                                        {{ section.average }}/5
+                                    </span>
+                                {% else %}
+                                    <span class="no-rating">
+                                        No rating
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% else %}
+
+            <div class="dashboard-empty">
+                No section data available.
+            </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <div class="dashboard-section recent-section">
+
+        <div class="dashboard-section-header">
+            <h2>Recent Submissions</h2>
+            <p>Latest student feedback submissions.</p>
+        </div>
+
+        {% if recent_submissions %}
+
+        <div class="dashboard-table-container">
+
+            <table class="dashboard-table">
+
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Student</th>
+                        <th>Registration No.</th>
+                        <th>Course</th>
+                        <th>Rating</th>
+                        <th>Date & Time</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for submission in recent_submissions %}
+
+                    <tr>
+
+                        <td>{{ loop.index }}</td>
+
+                        <td>
+                            <strong>{{ submission.student_name }}</strong>
+                        </td>
+
+                        <td>
+                            {{ submission.reg_no }}
+                        </td>
+
+                        <td>
+                            {{ submission.course_name }}
+                        </td>
+
+                        <td>
+
+                            {% if submission.avg_rating is not none %}
+                                <span class="dashboard-rating">
+                                    {{ submission.avg_rating }}/5
+                                </span>
+                            {% else %}
+                                N/A
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+                            {{ submission.created_at }}
+                        </td>
+
+                        <td>
+
+                            <a
+                                href="{{ url_for('submission_detail', submission_id=submission.id) }}"
+                                class="view-button"
+                            >
+                                View
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="dashboard-empty">
+            No submissions available yet.
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</main>
+
+<footer class="main-footer">
+    <p>© 2026 Corvit Institute of Information Technology</p>
+</footer>
+
+</body>
+</html>
+

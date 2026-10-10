@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Student Feedback | Corvit</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+<header class="top-header">
+
+    <div class="header-content">
+
+        <div class="brand">
+
+            <div class="brand-box">
+                C
+            </div>
+
+            <div>
+
+                <h1>Corvit</h1>
+
+                <span>
+                    Student Feedback System
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="header-text">
+
+            Student Portal
+
+        </div>
+
+    </div>
+
+</header>
+
+<main class="login-container">
+
+
+    <div class="login-card">
+
+
+        <div class="login-icon">
+            C
+        </div>
+
+
+        <h1>
+            Student Feedback
+        </h1>
+
+
+        <p class="login-description">
+
+            Please enter your information to provide
+            your valuable feedback.
+
+        </p>
+
+
+        <form action="/feedback"
+              method="POST">
+
+
+            <div class="form-group">
+
+                <label for="student_name">
+
+                    Student Name
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="student_name"
+                    name="student_name"
+                    placeholder="Enter your full name"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="reg_no">
+
+                    Registration Number
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="reg_no"
+                    name="reg_no"
+                    placeholder="Enter your registration number"
+                    required
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="course_id">
+
+                    Select Your Course
+
+                </label>
+
+
+                <select
+                    id="course_id"
+                    name="course_id"
+                    required
+                >
+
+                    <option value="">
+
+                        Select your course
+
+                    </option>
+
+
+                    {% for course in courses %}
+
+                    <option value="{{ course.id }}">
+
+                        {{ course.name }}
+
+                    </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <!-- BUTTON -->
+
+            <button
+                type="submit"
+                class="continue-button">
+
+                Continue to Feedback
+
+            </button>
+
+
+        </form>
+
+
+        <p class="privacy-note">
+
+            Your feedback will help improve the quality
+            of courses, facilities and services.
+
+        </p>
+
+
+    </div>
+
+
+</main>
+
+
+<footer>
+
+    © 2026 Corvit Institute of Information Technology
+
+</footer>
+
+
+</body>
+
+</html>

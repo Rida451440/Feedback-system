@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Corvit Feedback System</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<header class="top-header">
+    <div class="header-content">
+
+        <div class="brand">
+            <div class="brand-box">C</div>
+
+            <div>
+                <h1>Corvit</h1>
+                <span>Student Feedback System</span>
+            </div>
+        </div>
+
+    </div>
+</header>
+
+
+<main class="home-container">
+
+    <div class="home-card">
+
+        <div class="home-icon">
+            C
+        </div>
+
+        <h1>Welcome to Corvit</h1>
+
+        <p class="home-description">
+            Student Feedback Management System
+        </p>
+
+        <p class="home-text">
+            Please select your portal to continue.
+        </p>
+
+
+        <div class="portal-options">
+
+            <a href="{{ url_for('student_login') }}"
+               class="portal-card">
+
+                <div class="portal-icon">
+                    👨‍🎓
+                </div>
+
+                <h2>Student</h2>
+
+                <p>
+                    Submit your course and institute feedback.
+                </p>
+
+                <span class="portal-button">
+                    Continue as Student
+                </span>
+
+            </a>
+
+
+            <a href="{{ url_for('admin_login') }}"
+               class="portal-card">
+
+                <div class="portal-icon">
+                    🔐
+                </div>
+
+                <h2>Admin</h2>
+
+                <p>
+                    Manage feedback, questions and reports.
+                </p>
+
+                <span class="portal-button">
+                    Continue as Admin
+                </span>
+
+            </a>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+<footer>
+    © 2026 Corvit Institute of Information Technology
+</footer>
+
+</body>
+</html>

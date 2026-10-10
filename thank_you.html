@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You | Corvit</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header class="top-header">
+    <div class="header-content">
+        <div class="brand">
+            <div class="brand-box">C</div>
+            <div>
+                <h1>Corvit</h1>
+                <span>Student Feedback System</span>
+            </div>
+        </div>
+
+        <div class="header-text">Student Portal</div>
+    </div>
+</header>
+
+<main class="login-container">
+    <div class="login-card">
+
+        <div class="login-icon">✓</div>
+
+        <h1>Thank You!</h1>
+
+        <p class="login-description">
+            Your feedback has been submitted successfully.
+        </p>
+
+        <p class="privacy-note">
+            Thank you for helping Corvit Institute of Information Technology
+            improve its courses, facilities and services.
+        </p>
+
+        <a href="{{ url_for('student_login') }}" class="continue-button">
+            Submit Another Feedback
+        </a>
+
+    </div>
+</main>
+
+<footer>
+    © 2026 Corvit Institute of Information Technology
+</footer>
+
+</body>
+</html>
